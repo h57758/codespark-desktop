@@ -24,14 +24,13 @@
   "config": {
     "forge": {
       "packagerConfig": {
+        "name": "codespark-desktop",
         "icon": "./icon.ico"
       },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "codespark_desktop"
-          }
+          "config": {}
         },
         {
           "name": "@electron-forge/maker-zip",
