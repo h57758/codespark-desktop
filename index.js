@@ -12,7 +12,8 @@ function createWindow () {
     height: 550,
     minWidth: 880,
     minHeight: 550,
-    autoHideMenuBar: true
+    autoHideMenuBar: true,
+    title: "codeSpark Desktop"
   })
 
   // and load the index.html of the app.

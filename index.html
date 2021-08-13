@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 
-	<title>codeSpark</title>
+	<title>codeSpark Desktop</title>
 
 	<link rel="stylesheet" href="https://codespark.com/play/index.css">
 	<link rel="stylesheet" href="./style.css">
@@ -40,17 +40,9 @@
       gameInstance.container.appendChild(popup);
     };
 
-    // calling onsuccess wil try to play the game which we don't want, so always callback onerror
+    // calling onsuccess to try to play the game
     UnityLoader.compatibilityCheck = (gameInstance, onsuccess, onerror) => {
-      if (!UnityLoader.SystemInfo.hasWebGL) {
-        popup(gameInstance, "This browser does not support WebGL and cannout run codeSpark Academy.");
-      } else if (UnityLoader.SystemInfo.mobile) {
-        popup(gameInstance, "The web version of codeSpark Academy is not supported on mobile.");
-      } else if (["Edge", "Firefox", "Chrome", "Safari"].indexOf(UnityLoader.SystemInfo.browser) == -1) {
-        popup(gameInstance, "The web version of codeSpark Academy will not run on this browser.");
-      } else {
-        onsuccess();
-      }
+      onsuccess();
     };
 
     // Get the proper files for the env and version
