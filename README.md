@@ -12,5 +12,5 @@ To install deps type ``npm install`` in the root of the project.
 To run the client type ``npm start`` in the root of the project.
 To compile the client type ``npm run make`` in the root of the project.
 
-## Todo
+## Project Todo List
 - [ ] Add better GUI
