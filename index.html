@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+	<title>codeSpark</title>
+
+	<link rel="stylesheet" href="https://codespark.com/play/index.css">
+	<link rel="stylesheet" href="./style.css">
+	<link rel="shortcut icon" href="https://codespark.com/play/TemplateData/favicon.ico">
+	<link rel="stylesheet" href="https://codespark.com/play/tingle.css">
+
+	<!-- We should unversion these two files if they're going to be loaded every time -->
+	<script src="https://codespark.com/play/UnityProgress.js">
+
+	</script>
+	<script src="https://codespark.com/play/UnityLoader.js">
+
+	</script>
+
+	<script>
+		// Override the built-in Unity checks for no WebGL and mobile which is originally set in UnityLoader.js
+
+    var popup = (gameInstance, message) => {
+      var popup = document.createElement("div");
+      popup.className = "popup";
+
+      var glitchElement = document.createElement("div");
+      glitchElement.innerHTML = `<img class="popup-hero-img" src="https://d2rxtexhquillh.cloudfront.net/webgl/template/no-mobil-glitch.png" alt="The Glitch" />`;
+      glitchElement.className = "popup-hero";
+      popup.appendChild(glitchElement);
+
+      var messageElement = document.createElement("div");
+      messageElement.innerHTML = message;
+      messageElement.className = "popup-message";
+      popup.appendChild(messageElement);
+
+      gameInstance.container.appendChild(popup);
+    };
+
+    // calling onsuccess wil try to play the game which we don't want, so always callback onerror
+    UnityLoader.compatibilityCheck = (gameInstance, onsuccess, onerror) => {
+      if (!UnityLoader.SystemInfo.hasWebGL) {
+        popup(gameInstance, "This browser does not support WebGL and cannout run codeSpark Academy.");
+      } else if (UnityLoader.SystemInfo.mobile) {
+        popup(gameInstance, "The web version of codeSpark Academy is not supported on mobile.");
+      } else if (["Edge", "Firefox", "Chrome", "Safari"].indexOf(UnityLoader.SystemInfo.browser) == -1) {
+        popup(gameInstance, "The web version of codeSpark Academy will not run on this browser.");
+      } else {
+        onsuccess();
+      }
+    };
+
+    // Get the proper files for the env and version
+    var environment;
+    var gameInstance;
+
+    var devEnvironment = {
+      config: "https://s3.amazonaws.com/fooacademydev/cdn/webgl/webgl-config.json",
+      cdn: "https://dcuz1d5zdihs9.cloudfront.net/webgl/",
+      env: "DEV",
+    };
+
+    var qaEnvironment = {
+      config: "https://s3.amazonaws.com/fooacademyqa/cdn/webgl/webgl-config.json",
+      cdn: "https://d3oj17i1pzx538.cloudfront.net/webgl/",
+      env: "ALPHA",
+    };
+
+    var liveEnvironment = {
+      config: "https://s3.amazonaws.com/fooacademylive/cdn/webgl/webgl-config.json",
+      cdn: "https://d2rxtexhquillh.cloudfront.net/webgl/",
+      env: "LIVE2",
+    };
+    console.log('location.href', location.href);
+    if (location.href.includes("localhost") ||
+      location.href.includes("dev")) {
+      environment = devEnvironment;
+    } else if (location.href.includes("alpha")) {
+      environment = qaEnvironment;
+    } else {
+      environment = liveEnvironment;
+    }
+
+    // Get the version number config json
+    fetch(environment.config + "?cachebuster=" + crypto.getRandomValues(new Uint32Array(2)).join('-'))
+      .then(function (response) {
+        console.log('got json');
+        return response.json();
+      })
+      .then(function (json) {
+        console.log('response to json done');
+        console.log("unity instance: " + environment.cdn + json.version + "/Build/" + environment.env + ".json");
+        gameInstance = UnityLoader.instantiate("gameContainer", environment.cdn + json.version + "/Build/" + environment.env + ".json", { onProgress: UnityProgress });
+        window.onload = function () {
+          document.getElementsByTagName('canvas')[0].ondragstart = function (event) { event.preventDefault(); return false; };
+        }
+      });
+	</script>
+
+	<!-- Google Tag Manager -->
+	<script>
+		(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-P38JPFX');
+	</script>
+	<!-- End Google Tag Manager -->
+</head>
+
+<body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P38JPFX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+
+	<div id="gameContainer"></div>
+</body>
+
+</html>
